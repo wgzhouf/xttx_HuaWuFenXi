@@ -2,6 +2,7 @@ import xlrd
 import xlutils.copy
 
 from tool import toNumber, formatDate
+from tool import area_code_map,code_area_map
 
 
 def meiri_yonghu_huawuhuoyue(filepath, data_xttx, data_yx_zhuanxian, data_yx_duoren):
@@ -182,4 +183,40 @@ def dianhuahuiyi_shiyong_fenbu(filepath, data_xttx, data_yx_duoren):
         ws.write(row_pointer, 3, xttx_crr_row[10])
         ws.write(row_pointer, 4, xttx_crr_row[11])
         row_pointer += 1
+    wb.save(filepath)
+
+
+def gesheng_yonghu_xinzeng_huoyue_fenbu(filepath, data_xttx, data_it):
+    rb = xlrd.open_workbook(filepath)
+    wb = xlutils.copy.copy(rb)
+
+    ws = wb.get_sheet(3)
+
+    data_it_grid = {}
+    # 全国净增统计
+    for row_it in data_it:
+        temp_jingzeng = toNumber(str(row_it[9])) - toNumber(str(row_it[11]))
+        data_it_grid[str(row_it[8])] = temp_jingzeng
+    # 浙江净增统计
+    data_it_grid['浙江'] = toNumber(str(data_it[2][1])) - toNumber(str(data_it[6][5]))
+
+    row_pointer = 1
+    for xttx_crr_row in data_xttx:
+        # 省份
+        ws.write(row_pointer, 0, code_area_map[xttx_crr_row[0]])
+        # 净增用户
+        ws.write(row_pointer, 1, data_it_grid[code_area_map[xttx_crr_row[0]]])
+        # 总用户
+        ws.write(row_pointer, 2, xttx_crr_row[8])
+        # 活跃用户
+        ws.write(row_pointer, 3, xttx_crr_row[6])
+        # 短信业务
+        ws.write(row_pointer, 4, xttx_crr_row[4])
+        # 主叫话务量
+        ws.write(row_pointer, 5, xttx_crr_row[1])
+        # 电话会议
+        ws.write(row_pointer, 6, xttx_crr_row[2])
+
+        row_pointer += 1
+
     wb.save(filepath)

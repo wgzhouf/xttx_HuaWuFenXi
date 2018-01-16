@@ -19,5 +19,9 @@ def toNumber(str, need_xiaoshudian=False):
     return number
 
 if __name__ == '__main__':
-    str = '100.01'
-    print(toNumber(str,True))
+    area_code_map = {
+        '北京': '10',
+        '广东': '20'}
+    area_code_map['上海'] = '21'
+    print(area_code_map['北京'])
+    print(area_code_map['上海'])
