@@ -154,4 +154,4 @@ def formatDate(str):
     # 截取日
     day = str[6:]
 
-    return year + '年' + month + '月' + day + '日'
+    return month + '月' + day + '日'

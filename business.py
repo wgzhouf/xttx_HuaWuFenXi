@@ -200,6 +200,9 @@ def gesheng_yonghu_xinzeng_huoyue_fenbu(filepath, data_xttx, data_it):
     # 浙江净增统计
     data_it_grid['浙江'] = toNumber(str(data_it[2][1])) - toNumber(str(data_it[6][5]))
 
+    xttx_zong_yonghu = 0
+    xttx_zong_huoyue = 0
+    xttx_zong_duanxin = 0
     row_pointer = 1
     for xttx_crr_row in data_xttx:
         # 省份
@@ -207,8 +210,10 @@ def gesheng_yonghu_xinzeng_huoyue_fenbu(filepath, data_xttx, data_it):
         # 净增用户
         ws.write(row_pointer, 1, data_it_grid[code_area_map[xttx_crr_row[0]]])
         # 总用户
+        xttx_zong_yonghu += toNumber(xttx_crr_row[8])
         ws.write(row_pointer, 2, xttx_crr_row[8])
         # 活跃用户
+        xttx_zong_huoyue += toNumber(xttx_crr_row[6])
         ws.write(row_pointer, 3, xttx_crr_row[6])
         # 短信业务
         ws.write(row_pointer, 4, xttx_crr_row[4])
@@ -217,6 +222,42 @@ def gesheng_yonghu_xinzeng_huoyue_fenbu(filepath, data_xttx, data_it):
         # 电话会议
         ws.write(row_pointer, 6, xttx_crr_row[2])
 
+        row_pointer += 1
+    ws.write(row_pointer, 0, '小计')
+    ws.write(row_pointer, 2, xttx_zong_yonghu)
+    ws.write(row_pointer, 3, xttx_zong_huoyue)
+
+    wb.save(filepath)
+
+
+def zte_caps_caculate(filepath, data_zte):
+    rb = xlrd.open_workbook(filepath)
+    wb = xlutils.copy.copy(rb)
+
+    ws = wb.get_sheet(4)
+
+    data_grid = {}
+    for row_zte in data_zte:
+        if(row_zte[9] not in data_grid.keys()):
+            data_grid[row_zte[9]] = {}
+        else:
+            if(row_zte[12] not in data_grid[row_zte[9]].keys()):
+                data_grid[row_zte[9]][row_zte[12]] = toNumber(row_zte[14], True)
+            else:
+                data_grid[row_zte[9]][row_zte[12]] += toNumber(row_zte[14], True)
+
+    row_pointer = 0
+    result_grid = {}
+    for day, day_grid in data_grid.items():
+        max = 0
+        for time, time_data in day_grid.items():
+            if time_data >= max:
+                max = time_data
+        result_grid[day] = max
+
+    for key, value in result_grid.items():
+        ws.write(row_pointer, 0, key)
+        ws.write(row_pointer, 1, value)
         row_pointer += 1
 
     wb.save(filepath)
