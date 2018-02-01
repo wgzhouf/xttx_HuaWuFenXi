@@ -124,20 +124,26 @@ def toNumber(str, need_xiaoshudian=False):
     :return: 数字类型数字
     """
     number = 0
-    if (not need_xiaoshudian):
-        if '.' in str:
-            number = str[0:str.index('.')]
-            if(number != ''):
-                number = int(number)
+    try:
+        if (not need_xiaoshudian):
+            if '.' in str:
+                number = str[0:str.index('.')]
+                if number != '':
+                    number = int(number)
+                else:
+                    number = 0
             else:
-                number = 0
+                if number != '':
+                    number = int(str)
+                else:
+                    number = 0
         else:
-            number = int(str)
-    else:
-        if '.' in str:
-            number = float(str)
-        else:
-            number = int(str)
+            if '.' in str:
+                number = float(str)
+            else:
+                number = int(str)
+    except ValueError:
+        number = 0
     return number
 
 
