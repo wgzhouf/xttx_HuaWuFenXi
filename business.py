@@ -198,7 +198,25 @@ def gesheng_yonghu_xinzeng_huoyue_fenbu(filepath, data_xttx, data_it):
         temp_jingzeng = toNumber(str(row_it[9])) - toNumber(str(row_it[11]))
         data_it_grid[str(row_it[8])] = temp_jingzeng
     # 浙江净增统计
-    data_it_grid['浙江'] = toNumber(str(data_it[2][1])) - toNumber(str(data_it[6][5]))
+    i = 0
+    zj_kaihu = 0
+    zj_xiaohu = 0
+    while True:
+        if data_it[i][0] == '合计':
+            zj_kaihu = toNumber(str(data_it[i][1]))
+            break
+        else:
+            i += 1
+    j = 0
+    while True:
+        if data_it[j][4] == '合计':
+            zj_xiaohu = toNumber(str(data_it[j][5]))
+            break
+        else:
+            j += 1
+
+    data_it_grid['浙江'] = zj_kaihu - zj_xiaohu
+    # data_it_grid['浙江'] = toNumber(str(data_it[2][1])) - toNumber(str(data_it[6][5]))
 
     xttx_zong_yonghu = 0
     xttx_zong_huoyue = 0
