@@ -223,6 +223,8 @@ def gesheng_yonghu_xinzeng_huoyue_fenbu(filepath, data_xttx, data_it):
     xttx_zong_duanxin = 0
     row_pointer = 1
     for xttx_crr_row in data_xttx:
+        if len(xttx_crr_row) == 0:
+            continue
         # 省份
         ws.write(row_pointer, 0, code_area_map[xttx_crr_row[0]])
         # 净增用户
